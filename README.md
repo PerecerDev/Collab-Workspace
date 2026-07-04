@@ -8,54 +8,73 @@ Inspired by (not copying) FigJam, Miro, Excalidraw, Linear, and Notion. **Collab
 
 ## Status
 
-**Architecture & agent network phase** — documentation and agent specialization complete. Application implementation has not started.
+**Phase 0 — Foundation** — Application scaffold, design system, app shell, and CI are in place. Real-time collaboration arrives in Phases 3–5.
 
 ---
 
-## Portfolio Goals
+## Quick Start
 
-This project demonstrates:
+```bash
+npm install
+npm run dev
+```
 
-- React + TypeScript architecture at scale
-- Real-time collaboration (WebSockets, presence, cursors)
-- State synchronization and optimistic UI
-- Feature-based modular frontend
-- UX, accessibility, performance, and testing discipline
-- Professional Git workflow (branches, Conventional Commits)
+Open [http://localhost:5173](http://localhost:5173).
 
 ---
 
-## Stack (Target)
+## Stack
 
-| Area | Technologies |
-| ---- | ------------ |
-| UI | React, TypeScript, Vite, React Router, Tailwind CSS |
-| State | Zustand, TanStack Query |
-| Real-time | WebSockets, Socket.IO (or equivalent) |
-| Interactions | dnd-kit, Framer Motion |
-| Forms | React Hook Form, Zod |
-| Testing | Vitest, React Testing Library |
-| Quality | ESLint, Prettier, Husky, lint-staged |
-| Deploy | Vercel |
+| Area         | Technologies                                              |
+| ------------ | --------------------------------------------------------- |
+| UI           | React 19, TypeScript, Vite, React Router, Tailwind CSS v4 |
+| State        | Zustand, TanStack Query                                   |
+| Real-time    | WebSockets, Socket.IO (Phase 3+)                          |
+| Interactions | dnd-kit, Framer Motion                                    |
+| Forms        | React Hook Form, Zod                                      |
+| Testing      | Vitest, React Testing Library                             |
+| Quality      | ESLint, Prettier, Husky, lint-staged                      |
+| Deploy       | Vercel (planned)                                          |
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/          # Router, providers, layouts
+├── features/     # Domain modules (workspace, canvas, …)
+├── realtime/     # WebSocket infrastructure
+├── sync/         # Optimistic sync layer
+├── shared/       # Design system, hooks, lib
+└── styles/       # Global CSS and tokens
+```
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) and [`.claude/doc/PROJECT_STRUCTURE.md`](.claude/doc/PROJECT_STRUCTURE.md).
 
 ---
 
 ## Documentation
 
-All product and technical SSOT lives in [`.claude/doc/`](.claude/doc/README.md).
-
-Start with [`.claude/doc/CONSTITUTION.md`](.claude/doc/CONSTITUTION.md).
+| Document                                | Description              |
+| --------------------------------------- | ------------------------ |
+| [ARCHITECTURE.md](ARCHITECTURE.md)      | Technical architecture   |
+| [ROADMAP.md](ROADMAP.md)                | Development phases       |
+| [CHANGELOG.md](CHANGELOG.md)            | Release history          |
+| [CONTRIBUTING.md](CONTRIBUTING.md)      | Contribution guide       |
+| [`.claude/doc/`](.claude/doc/README.md) | SSOT product & tech docs |
 
 ---
 
-## Agent Network
+## Scripts
 
-Development is orchestrated by an autonomous AI agent team defined in:
-
-- [`CLAUDE.md`](CLAUDE.md) — Project Manager
-- [`.claude/design-team/DESIGN-TEAM.md`](.claude/design-team/DESIGN-TEAM.md) — Design pipeline
-- [`.claude/engineering-team/ENGINEERING-TEAM.md`](.claude/engineering-team/ENGINEERING-TEAM.md) — Engineering pipeline
-- [`.claude/agents/`](.claude/agents/) — Role definitions
+| Command             | Description        |
+| ------------------- | ------------------ |
+| `npm run dev`       | Development server |
+| `npm run build`     | Production build   |
+| `npm run test`      | Run tests          |
+| `npm run lint`      | ESLint             |
+| `npm run typecheck` | TypeScript check   |
 
 ---
 
@@ -66,6 +85,16 @@ Development is orchestrated by an autonomous AI agent team defined in:
 - **Conventional Commits** required
 
 See [`.claude/doc/GIT_STRATEGY.md`](.claude/doc/GIT_STRATEGY.md).
+
+---
+
+## Agent Network
+
+Development is orchestrated by an autonomous AI agent team:
+
+- [`CLAUDE.md`](CLAUDE.md) — Project Manager
+- [`.claude/design-team/DESIGN-TEAM.md`](.claude/design-team/DESIGN-TEAM.md)
+- [`.claude/engineering-team/ENGINEERING-TEAM.md`](.claude/engineering-team/ENGINEERING-TEAM.md)
 
 ---
 
