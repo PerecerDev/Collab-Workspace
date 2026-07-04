@@ -1,4 +1,7 @@
-export type CanvasTool = 'select' | 'hand' | 'sticky';
+export type CanvasTool =
+  'select' | 'hand' | 'sticky' | 'text' | 'rectangle' | 'ellipse';
+
+export type ShapeKind = 'rectangle' | 'ellipse';
 
 export interface ViewportState {
   x: number;
@@ -35,6 +38,7 @@ export interface CanvasObjectNode {
   zIndex: number;
   content: string;
   color: string;
+  shapeKind?: ShapeKind;
   createdBy: string;
   updatedBy: string;
   updatedAt: string;
@@ -53,14 +57,28 @@ export const STICKY_NOTE_COLORS = [
   '#fed7aa',
 ] as const;
 
+export const SHAPE_FILL_COLORS = [
+  '#e4e4e7',
+  '#bfdbfe',
+  '#bbf7d0',
+  '#fbcfe8',
+  '#fed7aa',
+] as const;
+
 export const CANVAS_TOOL_LABELS: Record<CanvasTool, string> = {
   select: 'Select',
   hand: 'Hand',
   sticky: 'Sticky note',
+  text: 'Text',
+  rectangle: 'Rectangle',
+  ellipse: 'Ellipse',
 };
 
 export const CANVAS_TOOL_SHORTCUTS: Record<CanvasTool, string> = {
   select: 'V',
   hand: 'H',
   sticky: 'N',
+  text: 'T',
+  rectangle: 'R',
+  ellipse: 'O',
 };

@@ -69,6 +69,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Remote selection indicators on canvas objects
 - Sync status badge and pending/conflict store
 
+### Added (Phase 6)
+
+- Extensible block type registry with placement tools
+- Sticky notes, text blocks, rectangle and ellipse shapes
+- Block format bar with color picker and delete action
+- Functional resize handles with synced dimensions
+- Keyboard shortcuts for block tools and delete
+
 ---
 
 ### Added

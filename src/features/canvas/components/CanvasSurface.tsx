@@ -1,6 +1,7 @@
 import { DndContext } from '@dnd-kit/core';
 import { useEffect, useRef, useState } from 'react';
 
+import { BlockFormatBar } from '@/features/blocks/components/BlockFormatBar';
 import { CanvasGrid } from '@/features/canvas/components/CanvasGrid';
 import { CanvasObjectView } from '@/features/canvas/components/CanvasObjectView';
 import { CanvasToolbar } from '@/features/canvas/components/CanvasToolbar';
@@ -56,7 +57,7 @@ export function CanvasSurface({
   const { select, clear } = useCanvasSelectionActions();
   const { emitCursor } = usePresenceCursor({ workspaceId, enabled: true });
 
-  useCanvasKeyboard();
+  useCanvasKeyboard({ actorId: currentUserId });
   useCanvasSync({ workspaceId, userId, enabled: true });
   useSelectionSync({ workspaceId, userId, enabled: true });
 
@@ -94,10 +95,16 @@ export function CanvasSurface({
     );
 
     const tool = getEffectiveTool();
+    const placementTools = ['sticky', 'text', 'rectangle', 'ellipse'] as const;
 
-    if (tool === 'sticky') {
-      const note = canvasSyncEngine.createStickyNote(world.x, world.y, userId);
-      select(note.id, false);
+    if (placementTools.includes(tool as (typeof placementTools)[number])) {
+      const block = canvasSyncEngine.createBlock(
+        tool as 'sticky' | 'text' | 'rectangle' | 'ellipse',
+        world.x,
+        world.y,
+        userId,
+      );
+      select(block.id, false);
       return;
     }
 
@@ -116,7 +123,7 @@ export function CanvasSurface({
   const cursorClass =
     effectiveTool === 'hand' || isPanning
       ? 'cursor-grab active:cursor-grabbing'
-      : effectiveTool === 'sticky'
+      : ['sticky', 'text', 'rectangle', 'ellipse'].includes(effectiveTool)
         ? 'cursor-crosshair'
         : 'cursor-default';
 
@@ -136,6 +143,7 @@ export function CanvasSurface({
       >
         <ReconnectOverlay />
         <ConflictBanner />
+        <BlockFormatBar actorId={currentUserId} />
         <CanvasGrid viewport={viewport} />
         <LiveCursors workspaceId={workspaceId} currentUserId={currentUserId} />
 
@@ -173,10 +181,13 @@ export function CanvasSurface({
 
         <p className="text-text-muted pointer-events-none absolute bottom-6 left-4 z-10 max-w-lg text-xs">
           {activeTool === 'select' &&
-            'Drag objects to sync · Shift+click multi-select · Edits sync across tabs'}
+            'Drag objects to sync · Shift+click multi-select · Delete to remove'}
           {activeTool === 'hand' && 'Drag to pan · Ctrl+scroll to zoom'}
-          {activeTool === 'sticky' && 'Click to create a synced sticky note'}
-          {' · Space to pan · V/H/N shortcuts'}
+          {activeTool === 'sticky' && 'Click to place a synced sticky note'}
+          {activeTool === 'text' && 'Click to place a text block'}
+          {activeTool === 'rectangle' && 'Click to place a rectangle'}
+          {activeTool === 'ellipse' && 'Click to place an ellipse'}
+          {' · Space to pan · V/H/N/T/R/O shortcuts'}
         </p>
       </div>
     </DndContext>

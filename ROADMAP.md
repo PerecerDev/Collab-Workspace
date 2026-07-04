@@ -64,13 +64,13 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 6 — Blocks (Sticky Notes, Text, Shapes) (in progress)
+## Phase 6 — Blocks (Sticky Notes, Text, Shapes) ✅
 
-- [ ] Extensible block type registry
-- [ ] Sticky notes with color picker and resize
-- [ ] Text blocks with basic editing
-- [ ] Rectangle and ellipse shapes
-- [ ] Block format bar and delete shortcut
+- [x] Extensible block type registry
+- [x] Sticky notes with color picker and resize
+- [x] Text blocks with basic editing
+- [x] Rectangle and ellipse shapes
+- [x] Block format bar and delete shortcut
 
 ---
 

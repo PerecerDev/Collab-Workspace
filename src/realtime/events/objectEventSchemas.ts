@@ -12,6 +12,7 @@ export const canvasObjectNodeSchema = z.object({
   zIndex: z.number().int(),
   content: z.string(),
   color: z.string(),
+  shapeKind: z.enum(['rectangle', 'ellipse']).optional(),
   createdBy: z.string().min(1),
   updatedBy: z.string().min(1),
   updatedAt: z.string().datetime(),

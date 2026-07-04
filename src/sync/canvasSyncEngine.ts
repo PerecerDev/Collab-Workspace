@@ -1,4 +1,6 @@
+import type { BlockPlacementTool } from '@/features/blocks/types/block.types';
 import { useCanvasObjectsStore } from '@/features/canvas/stores/canvasObjectsStore';
+import { useCanvasSelectionStore } from '@/features/canvas/stores/canvasStores';
 import type { CanvasObjectNode } from '@/features/canvas/types/canvas.types';
 import { getRealtimeClient } from '@/realtime/socket/realtimeClientFactory';
 import { shouldApplyRemoteUpdate } from '@/sync/conflictResolver';
@@ -36,27 +38,36 @@ function emitObjectEvent<T>(
 }
 
 export const canvasSyncEngine = {
-  createStickyNote(x: number, y: number, userId: string): CanvasObjectNode {
-    const note = useCanvasObjectsStore
+  createBlock(
+    tool: BlockPlacementTool,
+    x: number,
+    y: number,
+    userId: string,
+  ): CanvasObjectNode {
+    const block = useCanvasObjectsStore
       .getState()
-      .createStickyNoteLocal(x, y, userId);
+      .createBlockLocal(tool, x, y, userId);
 
     useSyncStore.getState().addPending({
       id: crypto.randomUUID(),
       type: 'create',
-      objectId: note.id,
-      workspaceId: note.workspaceId,
-      snapshot: note,
+      objectId: block.id,
+      workspaceId: block.workspaceId,
+      snapshot: block,
       status: 'pending',
       createdAt: new Date().toISOString(),
     });
 
-    emitObjectEvent(note.workspaceId, userId, OBJECT_EVENT_TYPES.created, {
-      object: note,
+    emitObjectEvent(block.workspaceId, userId, OBJECT_EVENT_TYPES.created, {
+      object: block,
     } satisfies CreatedPayload);
 
-    useSyncStore.getState().confirmPending(note.id);
-    return note;
+    useSyncStore.getState().confirmPending(block.id);
+    return block;
+  },
+
+  createStickyNote(x: number, y: number, userId: string): CanvasObjectNode {
+    return canvasSyncEngine.createBlock('sticky', x, y, userId);
   },
 
   moveObject(
@@ -81,6 +92,73 @@ export const canvasSyncEngine = {
     } satisfies UpdatedPayload);
 
     return updated;
+  },
+
+  resizeObject(
+    id: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    actorId: string,
+  ): CanvasObjectNode | null {
+    const updatedAt = new Date().toISOString();
+    const updated = useCanvasObjectsStore
+      .getState()
+      .applyLocalPatch(id, { x, y, width, height, updatedAt }, actorId);
+
+    if (!updated) return null;
+
+    const workspaceId = useCanvasObjectsStore.getState().workspaceId;
+    if (!workspaceId) return updated;
+
+    emitObjectEvent(workspaceId, actorId, OBJECT_EVENT_TYPES.updated, {
+      objectId: id,
+      patch: { x, y, width, height, updatedAt, updatedBy: actorId },
+    } satisfies UpdatedPayload);
+
+    return updated;
+  },
+
+  updateObjectColor(
+    id: string,
+    color: string,
+    actorId: string,
+  ): CanvasObjectNode | null {
+    const updatedAt = new Date().toISOString();
+    const updated = useCanvasObjectsStore
+      .getState()
+      .applyLocalPatch(id, { color, updatedAt }, actorId);
+
+    if (!updated) return null;
+
+    const workspaceId = useCanvasObjectsStore.getState().workspaceId;
+    if (!workspaceId) return updated;
+
+    emitObjectEvent(workspaceId, actorId, OBJECT_EVENT_TYPES.updated, {
+      objectId: id,
+      patch: { color, updatedAt, updatedBy: actorId },
+    } satisfies UpdatedPayload);
+
+    return updated;
+  },
+
+  deleteObject(id: string, actorId: string): void {
+    const existing = useCanvasObjectsStore.getState().getObject(id);
+    if (!existing) return;
+
+    const updatedAt = new Date().toISOString();
+    useCanvasObjectsStore.getState().removeObjectLocal(id);
+    useCanvasSelectionStore.getState().clear();
+
+    const workspaceId = useCanvasObjectsStore.getState().workspaceId;
+    if (!workspaceId) return;
+
+    emitObjectEvent(workspaceId, actorId, OBJECT_EVENT_TYPES.deleted, {
+      objectId: id,
+      updatedAt,
+      updatedBy: actorId,
+    } satisfies DeletedPayload);
   },
 
   updateObjectContent(

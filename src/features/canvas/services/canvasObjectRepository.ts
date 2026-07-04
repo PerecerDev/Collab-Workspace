@@ -57,6 +57,7 @@ function createSeedObjects(
       zIndex: 3,
       content: '',
       color: '#e4e4e7',
+      shapeKind: 'rectangle',
       createdBy: userId,
       updatedBy: userId,
       updatedAt: now,

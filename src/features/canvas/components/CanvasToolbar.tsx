@@ -8,7 +8,14 @@ import {
   CANVAS_TOOL_SHORTCUTS,
 } from '@/features/canvas/types/canvas.types';
 
-const TOOLS: CanvasTool[] = ['select', 'hand', 'sticky'];
+const TOOLS: CanvasTool[] = [
+  'select',
+  'hand',
+  'sticky',
+  'text',
+  'rectangle',
+  'ellipse',
+];
 
 function ToolIcon({ tool }: { tool: CanvasTool }) {
   if (tool === 'select') {
@@ -41,6 +48,51 @@ function ToolIcon({ tool }: { tool: CanvasTool }) {
     );
   }
 
+  if (tool === 'text') {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        className="size-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden="true"
+      >
+        <path d="M4 7V5h16v2M12 5v14M8 19h8" />
+      </svg>
+    );
+  }
+
+  if (tool === 'rectangle') {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        className="size-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden="true"
+      >
+        <rect x="5" y="7" width="14" height="10" rx="1" />
+      </svg>
+    );
+  }
+
+  if (tool === 'ellipse') {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        className="size-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden="true"
+      >
+        <ellipse cx="12" cy="12" rx="8" ry="5" />
+      </svg>
+    );
+  }
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -62,7 +114,7 @@ export function CanvasToolbar() {
 
   return (
     <div
-      className="border-border bg-surface absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-xl border p-1 shadow-lg"
+      className="border-border bg-surface absolute bottom-6 left-1/2 z-20 flex max-w-[calc(100%-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-1 rounded-xl border p-1 shadow-lg"
       role="toolbar"
       aria-label="Canvas tools"
     >

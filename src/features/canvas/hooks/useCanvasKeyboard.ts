@@ -7,14 +7,20 @@ import {
 } from '@/features/canvas/stores/canvasStores';
 import type { CanvasTool } from '@/features/canvas/types/canvas.types';
 import { CANVAS_TOOL_SHORTCUTS } from '@/features/canvas/types/canvas.types';
+import { canvasSyncEngine } from '@/sync/canvasSyncEngine';
 
-export function useCanvasKeyboard() {
+interface UseCanvasKeyboardOptions {
+  actorId?: string;
+}
+
+export function useCanvasKeyboard({ actorId }: UseCanvasKeyboardOptions = {}) {
   const setActiveTool = useCanvasToolStore((state) => state.setActiveTool);
   const setSpacePressed = useCanvasToolStore((state) => state.setSpacePressed);
   const zoomIn = useCanvasViewportStore((state) => state.zoomIn);
   const zoomOut = useCanvasViewportStore((state) => state.zoomOut);
   const resetViewport = useCanvasViewportStore((state) => state.resetViewport);
   const clearSelection = useCanvasSelectionStore((state) => state.clear);
+  const selectedIds = useCanvasSelectionStore((state) => state.selectedIds);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -44,6 +50,16 @@ export function useCanvasKeyboard() {
 
       if (event.key === 'Escape') {
         clearSelection();
+        return;
+      }
+
+      if (
+        (event.key === 'Delete' || event.key === 'Backspace') &&
+        actorId &&
+        selectedIds.length > 0
+      ) {
+        event.preventDefault();
+        selectedIds.forEach((id) => canvasSyncEngine.deleteObject(id, actorId));
         return;
       }
 
@@ -79,8 +95,10 @@ export function useCanvasKeyboard() {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [
+    actorId,
     clearSelection,
     resetViewport,
+    selectedIds,
     setActiveTool,
     setSpacePressed,
     zoomIn,

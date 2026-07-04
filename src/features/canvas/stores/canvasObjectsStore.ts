@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 
+import { createBlockNode } from '@/features/blocks/registry/createBlockNode';
+import type { BlockPlacementTool } from '@/features/blocks/types/block.types';
 import { canvasObjectRepository } from '@/features/canvas/services/canvasObjectRepository';
 import type { CanvasObjectNode } from '@/features/canvas/types/canvas.types';
-import { STICKY_NOTE_COLORS } from '@/features/canvas/types/canvas.types';
 import { shouldApplyRemoteUpdate } from '@/sync/conflictResolver';
 
 interface CanvasObjectsState {
@@ -31,7 +32,8 @@ interface CanvasObjectsState {
   ) => boolean;
   mergeRemoteSnapshot: (objects: CanvasObjectNode[]) => void;
   removeObjectLocal: (id: string) => void;
-  createStickyNoteLocal: (
+  createBlockLocal: (
+    tool: BlockPlacementTool,
     x: number,
     y: number,
     userId: string,
@@ -201,32 +203,22 @@ export const useCanvasObjectsStore = create<CanvasObjectsState>((set, get) => ({
       return next;
     }),
 
-  createStickyNoteLocal: (x, y, userId) => {
+  createBlockLocal: (tool, x, y, userId) => {
     const { workspaceId, objects } = get();
     if (!workspaceId) throw new Error('Canvas not loaded');
 
-    const now = new Date().toISOString();
     const maxZ = objects.reduce((max, obj) => Math.max(max, obj.zIndex), 0);
-
-    const note = normalizeObject({
-      id: crypto.randomUUID(),
+    const block = createBlockNode({
       workspaceId,
-      type: 'sticky_note',
-      x: x - 100,
-      y: y - 80,
-      width: 200,
-      height: 160,
-      rotation: 0,
+      userId,
+      x,
+      y,
       zIndex: maxZ + 1,
-      content: '',
-      color: STICKY_NOTE_COLORS[objects.length % STICKY_NOTE_COLORS.length],
-      createdBy: userId,
-      updatedBy: userId,
-      updatedAt: now,
+      tool,
     });
 
-    get().applyLocalObject(note);
-    return note;
+    get().applyLocalObject(block);
+    return block;
   },
 }));
 
