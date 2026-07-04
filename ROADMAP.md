@@ -34,18 +34,27 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 3 — Real-Time Infrastructure ✅ (in progress)
+## Phase 3 — Real-Time Infrastructure ✅
 
 - [x] WebSocket-ready client with mock BroadcastChannel transport
 - [x] Event layer with Zod-validated payloads
 - [x] Connection status store and UI
 - [x] Presence store with room sync
 - [x] Live cursors and avatar stack on canvas
-- [ ] Merge to main
 
 ---
 
-## Phase 4 — Canvas Core
+## Phase 4 — Canvas Core ✅ (in progress)
+
+- [x] Infinite canvas (pan, zoom, viewport store)
+- [x] Toolbar and tool selection
+- [x] Selection with multi-select and handles
+- [x] dnd-kit object drag on canvas
+- [x] Viewport controls and keyboard shortcuts
+
+---
+
+## Phase 5 — Collaborative Sync
 
 - [ ] WebSocket client + reconnect
 - [ ] Event layer with Zod payloads

@@ -53,6 +53,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - PresenceAvatarStack and LiveCursor components on workspace canvas
 - Event dispatcher and presence merge tests
 
+### Added (Phase 4)
+
+- Infinite canvas with pan, zoom, and viewport mathematics
+- Canvas toolbar (select, hand, sticky note) with keyboard shortcuts
+- dnd-kit object dragging with zoom-aware coordinates
+- Multi-select, selection handles, and viewport controls
+- Mock canvas objects persisted per workspace
+
 ---
 
 ### Added
