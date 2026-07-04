@@ -20,13 +20,3 @@ export const userSchema = z.object({
   avatarUrl: z.string().url().optional(),
   createdAt: z.string().datetime(),
 });
-
-export const workspaceSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1).max(80),
-  description: z.string().max(280).optional(),
-  ownerId: z.string(),
-  memberIds: z.array(z.string()),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-});

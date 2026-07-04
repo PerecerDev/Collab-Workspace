@@ -15,21 +15,22 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 1 — Auth & Domain Types ✅ (in progress)
+## Phase 1 — Auth & Domain Types ✅
 
 - [x] Domain types (User, Workspace, CanvasObject)
 - [x] Mock auth session
 - [x] Protected routes
 - [x] Zod validation
-- [ ] Merge to main
 
 ---
 
-## Phase 2 — Workspaces
+## Phase 2 — Workspaces ✅ (in progress)
 
-- [ ] Workspace CRUD
-- [ ] Workspace list with search
-- [ ] Settings and members (mock)
+- [x] Workspace CRUD with mock persistence
+- [x] Workspace list with search
+- [x] Create and edit workspace forms
+- [x] Workspace settings and members (mock)
+- [x] Sidebar navigation and breadcrumbs
 
 ---
 

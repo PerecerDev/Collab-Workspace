@@ -1,9 +1,10 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { AuthGuard, GuestGuard } from '@/features/auth/components/AuthGuard';
 import { AppShell } from '@/app/layouts/AppShell';
 import { NotFoundPage } from '@/app/pages/NotFoundPage';
+import { AuthGuard, GuestGuard } from '@/features/auth/components/AuthGuard';
+import { WorkspaceLayout } from '@/features/workspace/layouts/WorkspaceLayout';
 import { ROUTES } from '@/shared/lib/constants';
 
 const HomePage = lazy(() =>
@@ -24,9 +25,21 @@ const WorkspacesPage = lazy(() =>
   })),
 );
 
+const CreateWorkspacePage = lazy(() =>
+  import('@/features/workspace/pages/CreateWorkspacePage').then((m) => ({
+    default: m.CreateWorkspacePage,
+  })),
+);
+
 const WorkspaceCanvasPage = lazy(() =>
   import('@/features/workspace/pages/WorkspaceCanvasPage').then((m) => ({
     default: m.WorkspaceCanvasPage,
+  })),
+);
+
+const WorkspaceSettingsPage = lazy(() =>
+  import('@/features/workspace/pages/WorkspaceSettingsPage').then((m) => ({
+    default: m.WorkspaceSettingsPage,
   })),
 );
 
@@ -49,8 +62,21 @@ export const router = createBrowserRouter([
       {
         element: <AuthGuard />,
         children: [
-          { path: 'workspaces', element: <WorkspacesPage /> },
-          { path: 'workspace/:workspaceId', element: <WorkspaceCanvasPage /> },
+          {
+            element: <WorkspaceLayout />,
+            children: [
+              { path: 'workspaces', element: <WorkspacesPage /> },
+              { path: 'workspaces/new', element: <CreateWorkspacePage /> },
+              {
+                path: 'workspace/:workspaceId',
+                element: <WorkspaceCanvasPage />,
+              },
+              {
+                path: 'workspace/:workspaceId/settings',
+                element: <WorkspaceSettingsPage />,
+              },
+            ],
+          },
           { path: 'settings', element: <SettingsPage /> },
         ],
       },

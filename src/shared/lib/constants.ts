@@ -2,8 +2,11 @@ export const APP_NAME = 'Collab Workspace';
 
 export const ROUTES = {
   home: '/',
+  login: '/login',
   workspaces: '/workspaces',
+  workspacesNew: '/workspaces/new',
   workspace: (id: string) => `/workspace/${id}`,
+  workspaceSettings: (id: string) => `/workspace/${id}/settings`,
   settings: '/settings',
 } as const;
 

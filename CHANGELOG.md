@@ -33,6 +33,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Workspace service with TanStack Query integration
 - Auth service unit tests
 
+### Added (Phase 2)
+
+- Workspace mock persistence via localStorage repository
+- Full workspace CRUD service with owner/member permissions
+- Create workspace page with validated form
+- Workspace settings page (edit, delete, members)
+- Client-side workspace search with debounce
+- Workspace sidebar navigation and breadcrumbs
+- Workspace service and search hook tests
+
 ---
 
 ### Added
