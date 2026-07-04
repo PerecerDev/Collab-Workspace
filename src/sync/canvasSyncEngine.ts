@@ -1,9 +1,11 @@
 import type { BlockPlacementTool } from '@/features/blocks/types/block.types';
+import { ACTIVITY_TYPES, activityService } from '@/features/activity';
 import { useCanvasObjectsStore } from '@/features/canvas/stores/canvasObjectsStore';
 import { useCanvasSelectionStore } from '@/features/canvas/stores/canvasStores';
 import type { CanvasObjectNode } from '@/features/canvas/types/canvas.types';
 import { getRealtimeClient } from '@/realtime/socket/realtimeClientFactory';
 import { shouldApplyRemoteUpdate } from '@/sync/conflictResolver';
+import type { TaskBlockStatus } from '@/shared/types/domain';
 import {
   OBJECT_EVENT_TYPES,
   type objectCreatedPayloadSchema,
@@ -63,6 +65,14 @@ export const canvasSyncEngine = {
     } satisfies CreatedPayload);
 
     useSyncStore.getState().confirmPending(block.id);
+
+    void activityService.record(
+      block.workspaceId,
+      userId,
+      ACTIVITY_TYPES.objectCreated,
+      { objectType: block.type, objectId: block.id },
+    );
+
     return block;
   },
 
@@ -159,6 +169,74 @@ export const canvasSyncEngine = {
       updatedAt,
       updatedBy: actorId,
     } satisfies DeletedPayload);
+
+    void activityService.record(
+      workspaceId,
+      actorId,
+      ACTIVITY_TYPES.objectDeleted,
+      {
+        objectId: id,
+        objectType: existing.type,
+      },
+    );
+  },
+
+  updateTaskStatus(
+    id: string,
+    status: TaskBlockStatus,
+    actorId: string,
+    workspaceId: string,
+  ): CanvasObjectNode | null {
+    const updatedAt = new Date().toISOString();
+    const updated = useCanvasObjectsStore
+      .getState()
+      .applyLocalPatch(id, { taskStatus: status, updatedAt }, actorId);
+
+    if (!updated) return null;
+
+    emitObjectEvent(workspaceId, actorId, OBJECT_EVENT_TYPES.updated, {
+      objectId: id,
+      patch: { taskStatus: status, updatedAt, updatedBy: actorId },
+    } satisfies UpdatedPayload);
+
+    void activityService.record(
+      workspaceId,
+      actorId,
+      ACTIVITY_TYPES.taskStatusChanged,
+      { objectId: id, status },
+    );
+
+    return updated;
+  },
+
+  updateTaskAssignee(
+    id: string,
+    assigneeId: string | undefined,
+    actorId: string,
+    workspaceId: string,
+  ): CanvasObjectNode | null {
+    const updatedAt = new Date().toISOString();
+    const updated = useCanvasObjectsStore
+      .getState()
+      .applyLocalPatch(id, { assigneeId, updatedAt }, actorId);
+
+    if (!updated) return null;
+
+    emitObjectEvent(workspaceId, actorId, OBJECT_EVENT_TYPES.updated, {
+      objectId: id,
+      patch: { assigneeId, updatedAt, updatedBy: actorId },
+    } satisfies UpdatedPayload);
+
+    if (assigneeId) {
+      void activityService.record(
+        workspaceId,
+        actorId,
+        ACTIVITY_TYPES.taskAssigned,
+        { objectId: id, assigneeId },
+      );
+    }
+
+    return updated;
   },
 
   updateObjectContent(

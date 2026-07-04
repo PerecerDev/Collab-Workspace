@@ -1,5 +1,7 @@
+import type { TaskBlockStatus } from '@/shared/types/domain';
+
 export type CanvasTool =
-  'select' | 'hand' | 'sticky' | 'text' | 'rectangle' | 'ellipse';
+  'select' | 'hand' | 'sticky' | 'text' | 'rectangle' | 'ellipse' | 'task';
 
 export type ShapeKind = 'rectangle' | 'ellipse';
 
@@ -29,7 +31,7 @@ export interface CanvasRect {
 export interface CanvasObjectNode {
   id: string;
   workspaceId: string;
-  type: 'sticky_note' | 'shape' | 'text';
+  type: 'sticky_note' | 'shape' | 'text' | 'task';
   x: number;
   y: number;
   width: number;
@@ -39,6 +41,8 @@ export interface CanvasObjectNode {
   content: string;
   color: string;
   shapeKind?: ShapeKind;
+  taskStatus?: TaskBlockStatus;
+  assigneeId?: string;
   createdBy: string;
   updatedBy: string;
   updatedAt: string;
@@ -72,6 +76,7 @@ export const CANVAS_TOOL_LABELS: Record<CanvasTool, string> = {
   text: 'Text',
   rectangle: 'Rectangle',
   ellipse: 'Ellipse',
+  task: 'Task',
 };
 
 export const CANVAS_TOOL_SHORTCUTS: Record<CanvasTool, string> = {
@@ -81,4 +86,5 @@ export const CANVAS_TOOL_SHORTCUTS: Record<CanvasTool, string> = {
   text: 'T',
   rectangle: 'R',
   ellipse: 'O',
+  task: 'K',
 };

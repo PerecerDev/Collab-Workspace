@@ -77,6 +77,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Functional resize handles with synced dimensions
 - Keyboard shortcuts for block tools and delete
 
+### Added (Phase 7)
+
+- Task blocks on canvas with status, assignee, and synced edits
+- Comment threads on workspace and selected canvas objects
+- Cross-tab comment sync via realtime comment events
+- Workspace activity feed with formatted event messages
+- Collaboration side panel (Activity + Comments tabs)
+
 ---
 
 ### Added

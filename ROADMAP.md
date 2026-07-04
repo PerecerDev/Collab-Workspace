@@ -74,9 +74,19 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 7+ — Tasks, Comments, Palette, Polish
+## Phase 7 — Tasks, Comments, Activity ✅
 
-See master plan for Phases 7–10.
+- [x] Task blocks with status, assignee, and canvas placement
+- [x] Comment threads on objects and workspace
+- [x] Cross-tab comment sync
+- [x] Activity feed with event formatting
+- [x] Workspace side panel (Activity + Comments)
+
+---
+
+## Phase 8+ — Command Palette, Notifications, Polish
+
+See master plan for Phases 8–10.
 
 ---
 

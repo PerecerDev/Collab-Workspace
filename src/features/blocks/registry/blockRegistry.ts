@@ -46,6 +46,15 @@ const BLOCK_DEFINITIONS: BlockDefinition[] = [
     defaultColor: SHAPE_FILL_COLORS[1],
     shapeKind: 'ellipse',
   },
+  {
+    type: 'task',
+    label: 'Task',
+    shortcut: 'K',
+    tool: 'task',
+    defaultSize: { width: 240, height: 140 },
+    defaultColor: '#ffffff',
+    placeholder: 'Task title…',
+  },
 ];
 
 const byTool = new Map<BlockPlacementTool, BlockDefinition>(

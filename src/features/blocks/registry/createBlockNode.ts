@@ -1,3 +1,4 @@
+import type { TaskBlockStatus } from '@/shared/types/domain';
 import { blockRegistry } from '@/features/blocks/registry/blockRegistry';
 import type { CreateBlockOptions } from '@/features/blocks/types/block.types';
 import type { BlockPlacementTool } from '@/features/blocks/types/block.types';
@@ -35,9 +36,12 @@ export function createBlockNode({
     height: definition.defaultSize.height,
     rotation: 0,
     zIndex,
-    content: '',
+    content: definition.type === 'task' ? 'New task' : '',
     color: options?.color ?? definition.defaultColor,
     shapeKind: options?.shapeKind ?? definition.shapeKind,
+    taskStatus:
+      definition.type === 'task' ? ('todo' as TaskBlockStatus) : undefined,
+    assigneeId: undefined,
     createdBy: userId,
     updatedBy: userId,
     updatedAt: now,

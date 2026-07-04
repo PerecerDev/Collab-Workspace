@@ -60,7 +60,8 @@ export interface TaskBlockContent {
 export interface Comment {
   id: string;
   workspaceId: string;
-  objectId?: string;
+  targetType: 'workspace' | 'object';
+  targetId: string;
   authorId: string;
   body: string;
   createdAt: string;

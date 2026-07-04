@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 import { REALTIME_EVENT_TYPES } from '@/realtime/types/presence.types';
 import {
+  COMMENT_EVENT_TYPES,
+  commentCreatedPayloadSchema,
+} from '@/realtime/events/commentEventSchemas';
+import {
   OBJECT_EVENT_TYPES,
   objectCreatedPayloadSchema,
   objectDeletedPayloadSchema,
@@ -70,6 +74,7 @@ export const eventPayloadSchemas: Record<string, z.ZodType> = {
   [OBJECT_EVENT_TYPES.deleted]: objectDeletedPayloadSchema,
   [OBJECT_EVENT_TYPES.sync]: objectsSyncPayloadSchema,
   [OBJECT_EVENT_TYPES.selection]: presenceSelectionPayloadSchema,
+  [COMMENT_EVENT_TYPES.created]: commentCreatedPayloadSchema,
 };
 
 export type DomainEventInput = z.infer<typeof domainEventSchema>;

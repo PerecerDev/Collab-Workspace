@@ -1,6 +1,7 @@
 import { DndContext } from '@dnd-kit/core';
 import { useEffect, useRef, useState } from 'react';
 
+import { useCommentSync } from '@/features/comments/hooks/useCommentSync';
 import { BlockFormatBar } from '@/features/blocks/components/BlockFormatBar';
 import { CanvasGrid } from '@/features/canvas/components/CanvasGrid';
 import { CanvasObjectView } from '@/features/canvas/components/CanvasObjectView';
@@ -60,6 +61,7 @@ export function CanvasSurface({
   useCanvasKeyboard({ actorId: currentUserId });
   useCanvasSync({ workspaceId, userId, enabled: true });
   useSelectionSync({ workspaceId, userId, enabled: true });
+  useCommentSync({ workspaceId, userId, enabled: true });
 
   const { sensors, handleDragEnd } = useCanvasDnd(userId);
 
@@ -95,11 +97,17 @@ export function CanvasSurface({
     );
 
     const tool = getEffectiveTool();
-    const placementTools = ['sticky', 'text', 'rectangle', 'ellipse'] as const;
+    const placementTools = [
+      'sticky',
+      'text',
+      'task',
+      'rectangle',
+      'ellipse',
+    ] as const;
 
     if (placementTools.includes(tool as (typeof placementTools)[number])) {
       const block = canvasSyncEngine.createBlock(
-        tool as 'sticky' | 'text' | 'rectangle' | 'ellipse',
+        tool as (typeof placementTools)[number],
         world.x,
         world.y,
         userId,
@@ -123,7 +131,9 @@ export function CanvasSurface({
   const cursorClass =
     effectiveTool === 'hand' || isPanning
       ? 'cursor-grab active:cursor-grabbing'
-      : ['sticky', 'text', 'rectangle', 'ellipse'].includes(effectiveTool)
+      : ['sticky', 'text', 'task', 'rectangle', 'ellipse'].includes(
+            effectiveTool,
+          )
         ? 'cursor-crosshair'
         : 'cursor-default';
 
@@ -185,9 +195,10 @@ export function CanvasSurface({
           {activeTool === 'hand' && 'Drag to pan · Ctrl+scroll to zoom'}
           {activeTool === 'sticky' && 'Click to place a synced sticky note'}
           {activeTool === 'text' && 'Click to place a text block'}
+          {activeTool === 'task' && 'Click to place a task block'}
           {activeTool === 'rectangle' && 'Click to place a rectangle'}
           {activeTool === 'ellipse' && 'Click to place an ellipse'}
-          {' · Space to pan · V/H/N/T/R/O shortcuts'}
+          {' · Space to pan · V/H/N/T/K/R/O shortcuts'}
         </p>
       </div>
     </DndContext>

@@ -4,7 +4,8 @@ export type BlockTypeId = CanvasObjectNode['type'];
 
 export type ShapeKind = 'rectangle' | 'ellipse';
 
-export type BlockPlacementTool = 'sticky' | 'text' | 'rectangle' | 'ellipse';
+export type BlockPlacementTool =
+  'sticky' | 'text' | 'rectangle' | 'ellipse' | 'task';
 
 export interface BlockDefinition {
   type: BlockTypeId;

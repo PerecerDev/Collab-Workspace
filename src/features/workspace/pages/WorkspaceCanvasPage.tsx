@@ -6,6 +6,7 @@ import {
   WorkspaceBreadcrumbs,
   workspaceBreadcrumbs,
 } from '@/features/workspace/components/WorkspaceBreadcrumbs';
+import { WorkspaceSidePanel } from '@/features/workspace/components/WorkspaceSidePanel';
 import { useWorkspaceQuery } from '@/features/workspace/hooks/useWorkspacesQuery';
 import {
   ConnectionBanner,
@@ -75,11 +76,14 @@ export function WorkspaceCanvasPage() {
         </div>
       </div>
 
-      <CanvasSurface
-        workspaceId={workspace.id}
-        userId={user.id}
-        currentUserId={user.id}
-      />
+      <div className="flex min-h-0 flex-1">
+        <CanvasSurface
+          workspaceId={workspace.id}
+          userId={user.id}
+          currentUserId={user.id}
+        />
+        <WorkspaceSidePanel workspaceId={workspace.id} />
+      </div>
     </div>
   );
 }

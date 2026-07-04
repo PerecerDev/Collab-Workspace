@@ -33,4 +33,19 @@ describe('createBlockNode', () => {
     expect(node.type).toBe('shape');
     expect(node.shapeKind).toBe('ellipse');
   });
+
+  it('creates a task block with default status', () => {
+    const node = createBlockNode({
+      workspaceId: 'ws-1',
+      userId: 'user-1',
+      x: 200,
+      y: 200,
+      zIndex: 3,
+      tool: 'task',
+    });
+
+    expect(node.type).toBe('task');
+    expect(node.taskStatus).toBe('todo');
+    expect(node.content).toBe('New task');
+  });
 });

@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const canvasObjectNodeSchema = z.object({
   id: z.string().min(1),
   workspaceId: z.string().min(1),
-  type: z.enum(['sticky_note', 'shape', 'text']),
+  type: z.enum(['sticky_note', 'shape', 'text', 'task']),
   x: z.number(),
   y: z.number(),
   width: z.number().positive(),
@@ -13,6 +13,8 @@ export const canvasObjectNodeSchema = z.object({
   content: z.string(),
   color: z.string(),
   shapeKind: z.enum(['rectangle', 'ellipse']).optional(),
+  taskStatus: z.enum(['todo', 'in_progress', 'done']).optional(),
+  assigneeId: z.string().optional(),
   createdBy: z.string().min(1),
   updatedBy: z.string().min(1),
   updatedAt: z.string().datetime(),
