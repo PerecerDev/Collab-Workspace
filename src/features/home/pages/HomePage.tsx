@@ -28,12 +28,12 @@ export function HomePage() {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Link to={ROUTES.workspaces}>
-            <Button>Open workspaces</Button>
+          <Link to={ROUTES.login}>
+            <Button>Get started</Button>
           </Link>
-          <a href="https://github.com" target="_blank" rel="noreferrer">
-            <Button variant="secondary">View on GitHub</Button>
-          </a>
+          <Link to={ROUTES.workspaces}>
+            <Button variant="secondary">Browse workspaces</Button>
+          </Link>
         </div>
 
         <dl className="grid gap-4 pt-8 sm:grid-cols-3">

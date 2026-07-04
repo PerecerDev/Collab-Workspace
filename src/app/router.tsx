@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import { AuthGuard, GuestGuard } from '@/features/auth/components/AuthGuard';
 import { AppShell } from '@/app/layouts/AppShell';
 import { NotFoundPage } from '@/app/pages/NotFoundPage';
 import { ROUTES } from '@/shared/lib/constants';
@@ -8,6 +9,12 @@ import { ROUTES } from '@/shared/lib/constants';
 const HomePage = lazy(() =>
   import('@/features/home/pages/HomePage').then((m) => ({
     default: m.HomePage,
+  })),
+);
+
+const LoginPage = lazy(() =>
+  import('@/features/auth/pages/LoginPage').then((m) => ({
+    default: m.LoginPage,
   })),
 );
 
@@ -35,9 +42,18 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'workspaces', element: <WorkspacesPage /> },
-      { path: 'workspace/:workspaceId', element: <WorkspaceCanvasPage /> },
-      { path: 'settings', element: <SettingsPage /> },
+      {
+        element: <GuestGuard />,
+        children: [{ path: 'login', element: <LoginPage /> }],
+      },
+      {
+        element: <AuthGuard />,
+        children: [
+          { path: 'workspaces', element: <WorkspacesPage /> },
+          { path: 'workspace/:workspaceId', element: <WorkspaceCanvasPage /> },
+          { path: 'settings', element: <SettingsPage /> },
+        ],
+      },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

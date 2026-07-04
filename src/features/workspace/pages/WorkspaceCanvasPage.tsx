@@ -1,11 +1,42 @@
 import { Link, useParams } from 'react-router-dom';
 
+import { useWorkspaceQuery } from '@/features/workspace/hooks/useWorkspacesQuery';
 import { Badge } from '@/shared/components/ui/Badge';
 import { Button } from '@/shared/components/ui/Button';
+import { Spinner } from '@/shared/components/ui/Spinner';
 import { ROUTES } from '@/shared/lib/constants';
 
 export function WorkspaceCanvasPage() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
+  const {
+    data: workspace,
+    isLoading,
+    isError,
+  } = useWorkspaceQuery(workspaceId);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-1 items-center justify-center py-24">
+        <Spinner label="Loading workspace" />
+      </div>
+    );
+  }
+
+  if (isError || !workspace) {
+    return (
+      <div className="mx-auto flex max-w-lg flex-1 flex-col items-center justify-center px-4 py-16 text-center">
+        <h1 className="text-text-primary text-xl font-semibold">
+          Workspace not found
+        </h1>
+        <p className="text-text-muted mt-2 text-sm">
+          This workspace may have been removed or you do not have access.
+        </p>
+        <Link to={ROUTES.workspaces} className="mt-6">
+          <Button variant="secondary">Back to workspaces</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
@@ -19,7 +50,7 @@ export function WorkspaceCanvasPage() {
           </Link>
           <span className="text-border">/</span>
           <h1 className="text-text-primary text-sm font-medium">
-            {workspaceId?.replace(/^ws-/, '').replace(/-/g, ' ') ?? 'Workspace'}
+            {workspace.name}
           </h1>
           <Badge variant="default">Canvas preview</Badge>
         </div>
@@ -47,11 +78,12 @@ export function WorkspaceCanvasPage() {
           </p>
           <p className="text-text-muted mt-2 text-sm">
             Pan, zoom, sticky notes, and live cursors arrive in upcoming phases.
-            Workspace ID:{' '}
-            <code className="bg-surface-elevated rounded px-1.5 py-0.5 text-xs">
-              {workspaceId}
-            </code>
           </p>
+          {workspace.description ? (
+            <p className="text-text-muted mt-3 text-xs">
+              {workspace.description}
+            </p>
+          ) : null}
         </div>
       </div>
     </div>

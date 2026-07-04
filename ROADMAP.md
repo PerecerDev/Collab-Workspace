@@ -4,7 +4,7 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 0 — Foundation ✅ (in progress)
+## Phase 0 — Foundation ✅
 
 - [x] Project scaffold (Vite, React, TS)
 - [x] Tailwind design tokens + dark mode
@@ -12,16 +12,16 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 - [x] Design system primitives
 - [x] Quality toolchain (ESLint, Prettier, Husky, Vitest)
 - [x] CI pipeline
-- [ ] Merge to main
 
 ---
 
-## Phase 1 — Auth & Domain Types
+## Phase 1 — Auth & Domain Types ✅ (in progress)
 
-- [ ] Domain types (User, Workspace, CanvasObject)
-- [ ] Mock auth session
-- [ ] Protected routes
-- [ ] Zod validation
+- [x] Domain types (User, Workspace, CanvasObject)
+- [x] Mock auth session
+- [x] Protected routes
+- [x] Zod validation
+- [ ] Merge to main
 
 ---
 

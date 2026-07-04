@@ -23,9 +23,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Master development plan (`.claude/plans/collab-workspace-master-plan.md`)
 - Architecture, contributing, and roadmap documentation
 
----
+### Added
 
-## [0.1.0] — 2026-07-04
+- Domain types aligned with `DATA_MODEL.md` (User, Workspace, CanvasObject, etc.)
+- Zod schemas for auth and workspace validation
+- Mock auth service with localStorage session persistence
+- Login page with React Hook Form + Zod
+- Auth and guest route guards
+- Workspace service with TanStack Query integration
+- Auth service unit tests
+
+---
 
 ### Added
 
