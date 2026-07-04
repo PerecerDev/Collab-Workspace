@@ -1,15 +1,10 @@
-import {
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core';
+import { PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 
 import { useCanvasObjectsStore } from '@/features/canvas/stores/canvasObjectsStore';
 import { useCanvasViewportStore } from '@/features/canvas/stores/canvasStores';
+import { canvasSyncEngine } from '@/sync/canvasSyncEngine';
 
-export function useCanvasDnd(onDragEndExtra?: (event: DragEndEvent) => void) {
-  const moveObject = useCanvasObjectsStore((state) => state.moveObject);
+export function useCanvasDnd(userId: string) {
   const viewport = useCanvasViewportStore((state) => state.viewport);
 
   const sensors = useSensors(
@@ -18,22 +13,21 @@ export function useCanvasDnd(onDragEndExtra?: (event: DragEndEvent) => void) {
     }),
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, delta } = event;
-    const objectId = String(active.id);
-    const object = useCanvasObjectsStore
-      .getState()
-      .objects.find((item) => item.id === objectId);
+  const handleDragEnd = (event: {
+    active: { id: string | number };
+    delta: { x: number; y: number };
+  }) => {
+    const objectId = String(event.active.id);
+    const object = useCanvasObjectsStore.getState().getObject(objectId);
 
-    if (object && delta) {
-      moveObject(
+    if (object && event.delta) {
+      canvasSyncEngine.moveObject(
         objectId,
-        object.x + delta.x / viewport.zoom,
-        object.y + delta.y / viewport.zoom,
+        object.x + event.delta.x / viewport.zoom,
+        object.y + event.delta.y / viewport.zoom,
+        userId,
       );
     }
-
-    onDragEndExtra?.(event);
   };
 
   return { sensors, handleDragEnd };

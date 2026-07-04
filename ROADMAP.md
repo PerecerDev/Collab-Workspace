@@ -44,7 +44,7 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 4 — Canvas Core ✅ (in progress)
+## Phase 4 — Canvas Core ✅
 
 - [x] Infinite canvas (pan, zoom, viewport store)
 - [x] Toolbar and tool selection
@@ -54,36 +54,29 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 5 — Collaborative Sync
+## Phase 5 — Collaborative Sync ✅
 
-- [ ] WebSocket client + reconnect
-- [ ] Event layer with Zod payloads
-- [ ] Mock WebSocket server
-- [ ] Presence store
-
----
-
-## Phase 4 — Canvas Core
-
-- [ ] Infinite canvas (pan/zoom)
-- [ ] Toolbar + tool selection
-- [ ] Selection system
-- [ ] dnd-kit integration
+- [x] Optimistic canvas object sync via realtime events
+- [x] Last-write-wins conflict resolver with user feedback
+- [x] Cross-tab object create/move/edit sync
+- [x] Remote selection indicators on canvas objects
+- [x] Conflict banner and sync status UI
 
 ---
 
-## Phase 5 — Collaborative Sync
+## Phase 6 — Blocks (Sticky Notes, Text, Shapes) (in progress)
 
-- [ ] Optimistic updates
-- [ ] Conflict handling
-- [ ] Live cursors
-- [ ] Selection sync
+- [ ] Extensible block type registry
+- [ ] Sticky notes with color picker and resize
+- [ ] Text blocks with basic editing
+- [ ] Rectangle and ellipse shapes
+- [ ] Block format bar and delete shortcut
 
 ---
 
-## Phase 6+ — Blocks, Tasks, Comments, Palette, Polish
+## Phase 7+ — Tasks, Comments, Palette, Polish
 
-See master plan for Phases 6–10.
+See master plan for Phases 7–10.
 
 ---
 

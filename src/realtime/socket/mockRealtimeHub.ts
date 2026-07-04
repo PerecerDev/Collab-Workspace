@@ -103,6 +103,18 @@ export class MockRealtimeHub {
       }
 
       session.lastSeenAt = new Date().toISOString();
+      return;
+    }
+
+    if (event.type === 'presence.selection') {
+      const room = this.rooms.get(event.workspaceId);
+      const session = event.sessionId ? room?.get(event.sessionId) : undefined;
+      if (!session) return;
+
+      session.selectedObjectIds = (
+        event.payload as { selectedObjectIds?: string[] }
+      ).selectedObjectIds;
+      session.lastSeenAt = new Date().toISOString();
     }
   }
 

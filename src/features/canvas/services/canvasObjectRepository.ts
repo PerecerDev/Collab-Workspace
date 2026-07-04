@@ -26,6 +26,7 @@ function createSeedObjects(
       content: 'Welcome to Collab Workspace',
       color: STICKY_NOTE_COLORS[0],
       createdBy: userId,
+      updatedBy: userId,
       updatedAt: now,
     },
     {
@@ -41,6 +42,7 @@ function createSeedObjects(
       content: 'Drag, pan, and zoom the canvas',
       color: STICKY_NOTE_COLORS[2],
       createdBy: userId,
+      updatedBy: userId,
       updatedAt: now,
     },
     {
@@ -56,6 +58,7 @@ function createSeedObjects(
       content: '',
       color: '#e4e4e7',
       createdBy: userId,
+      updatedBy: userId,
       updatedAt: now,
     },
   ];

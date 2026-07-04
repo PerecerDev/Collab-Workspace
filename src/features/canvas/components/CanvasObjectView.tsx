@@ -3,16 +3,31 @@ import { CSS } from '@dnd-kit/utilities';
 
 import { useCanvasSelectionStore } from '@/features/canvas/stores/canvasStores';
 import type { CanvasObjectNode } from '@/features/canvas/types/canvas.types';
+import { getPresenceColorClass } from '@/realtime/presence/presenceStore';
+import { canvasSyncEngine } from '@/sync/canvasSyncEngine';
+import { useRemoteSelections } from '@/sync/hooks/useSelectionSync';
 import { cn } from '@/shared/lib/cn';
 
 interface CanvasObjectViewProps {
   object: CanvasObjectNode;
+  workspaceId: string;
+  currentUserId?: string;
   onSelect: (id: string, additive: boolean) => void;
 }
 
-export function CanvasObjectView({ object, onSelect }: CanvasObjectViewProps) {
+export function CanvasObjectView({
+  object,
+  workspaceId,
+  currentUserId,
+  onSelect,
+}: CanvasObjectViewProps) {
   const isSelected = useCanvasSelectionStore((state) =>
     state.selectedIds.includes(object.id),
+  );
+  const remoteSelections = useRemoteSelections(
+    workspaceId,
+    object.id,
+    currentUserId,
   );
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -40,6 +55,9 @@ export function CanvasObjectView({ object, onSelect }: CanvasObjectViewProps) {
         isDragging && 'opacity-80',
         isSelected &&
           'ring-accent ring-2 ring-offset-2 ring-offset-transparent',
+        remoteSelections.length > 0 &&
+          !isSelected &&
+          'ring-2 ring-offset-2 ring-offset-transparent',
       )}
       onPointerDown={(event) => {
         event.stopPropagation();
@@ -48,6 +66,17 @@ export function CanvasObjectView({ object, onSelect }: CanvasObjectViewProps) {
       {...listeners}
       {...attributes}
     >
+      {remoteSelections.map((selection) => (
+        <span
+          key={selection.userId}
+          className={cn(
+            'pointer-events-none absolute inset-0 rounded-lg ring-2 ring-offset-2 ring-offset-transparent',
+            getPresenceColorClass(selection.colorIndex).replace('bg-', 'ring-'),
+          )}
+          aria-label={`Selected by ${selection.userName}`}
+        />
+      ))}
+
       {object.type === 'sticky_note' ? (
         <div
           className="flex h-full flex-col rounded-lg border border-black/5 p-3 shadow-md"
@@ -56,8 +85,17 @@ export function CanvasObjectView({ object, onSelect }: CanvasObjectViewProps) {
           <textarea
             className="h-full w-full resize-none bg-transparent text-sm text-zinc-900 outline-none"
             defaultValue={object.content}
+            key={`${object.id}-${object.updatedAt}`}
             placeholder="Write a note…"
             onPointerDown={(event) => event.stopPropagation()}
+            onBlur={(event) => {
+              if (!currentUserId) return;
+              canvasSyncEngine.updateObjectContent(
+                object.id,
+                event.target.value,
+                currentUserId,
+              );
+            }}
           />
         </div>
       ) : (

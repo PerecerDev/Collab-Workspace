@@ -36,6 +36,7 @@ export interface CanvasObjectNode {
   content: string;
   color: string;
   createdBy: string;
+  updatedBy: string;
   updatedAt: string;
 }
 

@@ -20,6 +20,13 @@ import { screenToWorld } from '@/features/canvas/utils/viewportMath';
 import { LiveCursors } from '@/realtime/components/LiveCursors';
 import { ReconnectOverlay } from '@/realtime/components/ReconnectOverlay';
 import { usePresenceCursor } from '@/realtime/hooks/usePresenceCursor';
+import {
+  ConflictBanner,
+  SyncStatusBadge,
+} from '@/sync/components/ConflictBanner';
+import { useCanvasSync } from '@/sync/hooks/useCanvasSync';
+import { useSelectionSync } from '@/sync/hooks/useSelectionSync';
+import { canvasSyncEngine } from '@/sync/canvasSyncEngine';
 import { cn } from '@/shared/lib/cn';
 
 interface CanvasSurfaceProps {
@@ -38,7 +45,6 @@ export function CanvasSurface({
 
   const objects = useCanvasObjectsStore((state) => state.objects);
   const loadObjects = useCanvasObjectsStore((state) => state.load);
-  const addStickyNote = useCanvasObjectsStore((state) => state.addStickyNote);
 
   const viewport = useCanvasViewportStore((state) => state.viewport);
   const isPanning = useCanvasViewportStore((state) => state.isPanning);
@@ -51,8 +57,10 @@ export function CanvasSurface({
   const { emitCursor } = usePresenceCursor({ workspaceId, enabled: true });
 
   useCanvasKeyboard();
+  useCanvasSync({ workspaceId, userId, enabled: true });
+  useSelectionSync({ workspaceId, userId, enabled: true });
 
-  const { sensors, handleDragEnd } = useCanvasDnd();
+  const { sensors, handleDragEnd } = useCanvasDnd(userId);
 
   const { handleWheel, handlePointerDown, handlePointerMove, handlePointerUp } =
     useCanvasPanZoom();
@@ -88,7 +96,7 @@ export function CanvasSurface({
     const tool = getEffectiveTool();
 
     if (tool === 'sticky') {
-      const note = addStickyNote(world.x, world.y, userId);
+      const note = canvasSyncEngine.createStickyNote(world.x, world.y, userId);
       select(note.id, false);
       return;
     }
@@ -127,6 +135,7 @@ export function CanvasSurface({
         aria-label="Collaborative canvas"
       >
         <ReconnectOverlay />
+        <ConflictBanner />
         <CanvasGrid viewport={viewport} />
         <LiveCursors workspaceId={workspaceId} currentUserId={currentUserId} />
 
@@ -148,20 +157,26 @@ export function CanvasSurface({
             <CanvasObjectView
               key={object.id}
               object={object}
+              workspaceId={workspaceId}
+              currentUserId={currentUserId}
               onSelect={select}
             />
           ))}
         </div>
 
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+          <SyncStatusBadge />
+        </div>
+
         <ViewportControls canvasWidth={size.width} canvasHeight={size.height} />
         <CanvasToolbar />
 
-        <p className="text-text-muted pointer-events-none absolute bottom-6 left-4 z-10 max-w-md text-xs">
+        <p className="text-text-muted pointer-events-none absolute bottom-6 left-4 z-10 max-w-lg text-xs">
           {activeTool === 'select' &&
-            'Click to select · Shift+click multi-select · Scroll to pan · Ctrl+scroll to zoom'}
+            'Drag objects to sync · Shift+click multi-select · Edits sync across tabs'}
           {activeTool === 'hand' && 'Drag to pan · Ctrl+scroll to zoom'}
-          {activeTool === 'sticky' && 'Click to place a sticky note'}
-          {' · Space to pan · V/H/N tool shortcuts'}
+          {activeTool === 'sticky' && 'Click to create a synced sticky note'}
+          {' · Space to pan · V/H/N shortcuts'}
         </p>
       </div>
     </DndContext>

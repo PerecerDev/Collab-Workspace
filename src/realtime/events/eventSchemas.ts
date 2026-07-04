@@ -1,6 +1,14 @@
 import { z } from 'zod';
 
 import { REALTIME_EVENT_TYPES } from '@/realtime/types/presence.types';
+import {
+  OBJECT_EVENT_TYPES,
+  objectCreatedPayloadSchema,
+  objectDeletedPayloadSchema,
+  objectUpdatedPayloadSchema,
+  objectsSyncPayloadSchema,
+  presenceSelectionPayloadSchema,
+} from '@/realtime/events/objectEventSchemas';
 
 const cursorSchema = z.object({
   x: z.number(),
@@ -45,6 +53,7 @@ export const roomSyncPayloadSchema = z.object({
       lastSeenAt: z.string().datetime(),
       cursor: cursorSchema.optional(),
       colorIndex: z.number().int().min(0).max(4),
+      selectedObjectIds: z.array(z.string()).optional(),
     }),
   ),
 });
@@ -56,6 +65,11 @@ export const eventPayloadSchemas: Record<string, z.ZodType> = {
   [REALTIME_EVENT_TYPES.presenceCursor]: presenceCursorPayloadSchema,
   [REALTIME_EVENT_TYPES.roomSync]: roomSyncPayloadSchema,
   [REALTIME_EVENT_TYPES.systemPing]: z.object({}),
+  [OBJECT_EVENT_TYPES.created]: objectCreatedPayloadSchema,
+  [OBJECT_EVENT_TYPES.updated]: objectUpdatedPayloadSchema,
+  [OBJECT_EVENT_TYPES.deleted]: objectDeletedPayloadSchema,
+  [OBJECT_EVENT_TYPES.sync]: objectsSyncPayloadSchema,
+  [OBJECT_EVENT_TYPES.selection]: presenceSelectionPayloadSchema,
 };
 
 export type DomainEventInput = z.infer<typeof domainEventSchema>;

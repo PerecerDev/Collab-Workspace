@@ -61,6 +61,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Multi-select, selection handles, and viewport controls
 - Mock canvas objects persisted per workspace
 
+### Added (Phase 5)
+
+- Optimistic canvas object sync via realtime object events
+- Last-write-wins conflict resolver with ConflictBanner feedback
+- Cross-tab create, move, and content edit sync
+- Remote selection indicators on canvas objects
+- Sync status badge and pending/conflict store
+
 ---
 
 ### Added

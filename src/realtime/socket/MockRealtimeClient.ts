@@ -1,4 +1,5 @@
 import { EventDispatcher } from '@/realtime/events/eventDispatcher';
+import { OBJECT_EVENT_TYPES } from '@/realtime/events/objectEventSchemas';
 import { mockRealtimeHub } from '@/realtime/socket/mockRealtimeHub';
 import type {
   ConnectionHandler,
@@ -167,7 +168,8 @@ export class MockRealtimeClient implements RealtimeClient {
       event.type === REALTIME_EVENT_TYPES.presenceJoin ||
       event.type === REALTIME_EVENT_TYPES.presenceLeave ||
       event.type === REALTIME_EVENT_TYPES.presenceUpdate ||
-      event.type === REALTIME_EVENT_TYPES.presenceCursor
+      event.type === REALTIME_EVENT_TYPES.presenceCursor ||
+      event.type === OBJECT_EVENT_TYPES.selection
     ) {
       this.syncRoom(event.workspaceId);
     }

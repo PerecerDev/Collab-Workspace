@@ -14,6 +14,7 @@ export interface PresenceSession {
   lastSeenAt: string;
   cursor?: CursorPosition;
   colorIndex: number;
+  selectedObjectIds?: string[];
 }
 
 export interface PresenceUser {
