@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import { router } from '@/app/router';
 import { useAuthStore } from '@/features/auth/stores/authStore';
+import { RealtimeProvider } from '@/realtime/providers/RealtimeProvider';
 import { Spinner } from '@/shared/components/ui/Spinner';
 import { queryClient } from '@/shared/lib/queryClient';
 import { initializeTheme } from '@/shared/stores/themeStore';
@@ -37,9 +38,11 @@ export function AppProviders() {
     <QueryClientProvider client={queryClient}>
       <ThemeInitializer>
         <AuthInitializer>
-          <Suspense fallback={<PageLoader />}>
-            <RouterProvider router={router} />
-          </Suspense>
+          <RealtimeProvider>
+            <Suspense fallback={<PageLoader />}>
+              <RouterProvider router={router} />
+            </Suspense>
+          </RealtimeProvider>
         </AuthInitializer>
       </ThemeInitializer>
       {import.meta.env.DEV ? (

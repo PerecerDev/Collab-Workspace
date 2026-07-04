@@ -24,7 +24,7 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 2 — Workspaces ✅ (in progress)
+## Phase 2 — Workspaces ✅
 
 - [x] Workspace CRUD with mock persistence
 - [x] Workspace list with search
@@ -34,7 +34,18 @@ Collab Workspace development roadmap. See the [master plan](.claude/plans/collab
 
 ---
 
-## Phase 3 — Real-Time Infrastructure
+## Phase 3 — Real-Time Infrastructure ✅ (in progress)
+
+- [x] WebSocket-ready client with mock BroadcastChannel transport
+- [x] Event layer with Zod-validated payloads
+- [x] Connection status store and UI
+- [x] Presence store with room sync
+- [x] Live cursors and avatar stack on canvas
+- [ ] Merge to main
+
+---
+
+## Phase 4 — Canvas Core
 
 - [ ] WebSocket client + reconnect
 - [ ] Event layer with Zod payloads

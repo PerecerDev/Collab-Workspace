@@ -1,22 +1,45 @@
+import { useRef, type MouseEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { useAuth } from '@/features/auth/stores/authStore';
 import {
   WorkspaceBreadcrumbs,
   workspaceBreadcrumbs,
 } from '@/features/workspace/components/WorkspaceBreadcrumbs';
 import { useWorkspaceQuery } from '@/features/workspace/hooks/useWorkspacesQuery';
-import { Badge } from '@/shared/components/ui/Badge';
+import {
+  ConnectionBanner,
+  ConnectionStatus,
+} from '@/realtime/components/ConnectionStatus';
+import { LiveCursors } from '@/realtime/components/LiveCursors';
+import { PresenceAvatarStack } from '@/realtime/components/PresenceAvatarStack';
+import { ReconnectOverlay } from '@/realtime/components/ReconnectOverlay';
+import { usePresenceCursor } from '@/realtime/hooks/usePresenceCursor';
+import { useWorkspaceRoom } from '@/realtime/hooks/useWorkspaceRoom';
 import { Button } from '@/shared/components/ui/Button';
 import { Spinner } from '@/shared/components/ui/Spinner';
 import { ROUTES } from '@/shared/lib/constants';
 
 export function WorkspaceCanvasPage() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
+  const { user } = useAuth();
+  const canvasRef = useRef<HTMLDivElement>(null);
+
   const {
     data: workspace,
     isLoading,
     isError,
   } = useWorkspaceQuery(workspaceId);
+
+  useWorkspaceRoom(workspaceId);
+  const { emitCursor } = usePresenceCursor({ workspaceId, enabled: true });
+
+  const handleMouseMove = (event: MouseEvent<HTMLDivElement>) => {
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    emitCursor(event.clientX - rect.left, event.clientY - rect.top);
+  };
 
   if (isLoading) {
     return (
@@ -44,24 +67,34 @@ export function WorkspaceCanvasPage() {
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
+      <ConnectionBanner />
+
       <div className="border-border bg-surface flex flex-col gap-3 border-b px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:px-6">
         <WorkspaceBreadcrumbs items={workspaceBreadcrumbs(workspace.name)} />
 
-        <div className="flex items-center gap-2">
-          <Badge variant="default">Canvas preview</Badge>
-          <Badge variant="accent">Real-time: Phase 3</Badge>
+        <div className="flex flex-wrap items-center gap-3">
+          <PresenceAvatarStack
+            workspaceId={workspace.id}
+            currentUserId={user?.id}
+            currentUserName={user?.name}
+          />
+          <ConnectionStatus />
           <Link to={ROUTES.workspaceSettings(workspace.id)}>
             <Button size="sm" variant="secondary">
               Settings
             </Button>
           </Link>
-          <Button size="sm" variant="secondary" disabled>
-            Share
-          </Button>
         </div>
       </div>
 
-      <div className="bg-canvas relative flex flex-1 items-center justify-center">
+      <div
+        ref={canvasRef}
+        className="bg-canvas relative flex flex-1 items-center justify-center overflow-hidden"
+        onMouseMove={handleMouseMove}
+      >
+        <ReconnectOverlay />
+        <LiveCursors workspaceId={workspace.id} currentUserId={user?.id} />
+
         <div
           className="absolute inset-0 opacity-30"
           style={{
@@ -71,12 +104,14 @@ export function WorkspaceCanvasPage() {
           }}
           aria-hidden="true"
         />
-        <div className="border-border bg-surface relative z-10 max-w-md rounded-xl border p-8 text-center shadow-lg">
+
+        <div className="border-border bg-surface relative z-[1] max-w-md rounded-xl border p-8 text-center shadow-lg">
           <p className="text-text-primary text-sm font-medium">
             Collaborative canvas
           </p>
           <p className="text-text-muted mt-2 text-sm">
-            Pan, zoom, sticky notes, and live cursors arrive in Phase 4–5.
+            Open this workspace in another tab to see live presence and cursors.
+            Pan, zoom, and blocks arrive in Phase 4–5.
           </p>
           {workspace.description ? (
             <p className="text-text-muted mt-3 text-xs">

@@ -43,6 +43,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Workspace sidebar navigation and breadcrumbs
 - Workspace service and search hook tests
 
+### Added (Phase 3)
+
+- Realtime client abstraction with mock BroadcastChannel transport for cross-tab sync
+- Zod-validated domain event layer and dispatcher
+- Connection and presence Zustand stores
+- RealtimeProvider with auto-connect on authentication
+- ConnectionStatus, ConnectionBanner, and ReconnectOverlay UI
+- PresenceAvatarStack and LiveCursor components on workspace canvas
+- Event dispatcher and presence merge tests
+
 ---
 
 ### Added
